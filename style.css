@@ -3,11 +3,25 @@ html{
     padding: 0;
 }
 #calculator-baseplate{
-    background-color: black;
+    position: absolute;
+    text-align: center;
+    background-color: brown;
     border-radius: 25px;
     box-shadow: 10px 5px 10px #888888;
     width: 600px;
-    height: 600px;
-    margin-top: 10vh;
+    height: 700px;
+    margin-top: 5vh;
     margin-left: 30vw;
+}
+
+#screen{
+    position: relative;
+    text-align: right;
+    border-style: inset;
+    border-color: brown;
+    background-color: lightgray;
+    margin-top: 5%;
+    height: 50px;
+    width: 550px;
+    font-size: 45px;
 }

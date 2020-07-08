@@ -43,7 +43,9 @@ body{
 
 #erase-button{
     position: relative;
-    border-style: solid;
+    border-style: outset;
+    border-color: #a13830;
+    font-size: 40px;
     margin: 10px 0 0 200px;
     width: 200px;
     height: 50px;

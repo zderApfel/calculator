@@ -22,7 +22,7 @@ if (equals sign is pressed){
         display MATH ERROR on screen
         break;
     }
-    else if (operation > 9999999999){
+    else if (result of operation length is longer than 15...){
         display OVERFLOW ERROR
         break;
     }
@@ -53,40 +53,63 @@ initialize();
 
 function initialize(){ //Function creates buttons, and gives them their appropriate functions
     SCREEN.value = CALCULATION.firstValue;
-    for (i=1; i <= 16; i++){
-        let symbolArray = "789+456-123*.0=÷".split("");
+    let symbolArray = "789+456-123*.0=÷".split("");
+    for (i=0; i < symbolArray.length; i++){
         let button = document.createElement("div");
         BUTTON_AREA.appendChild(button);
         button.classList.add("button");
-        button.id = symbolArray[i-1];
-        button.innerHTML = symbolArray[i-1];
-        if (parseInt(symbolArray[i-1]) || symbolArray[i-1] == "0"){
-            button.addEventListener("click", function() {numberOperations(button.id)});
+        button.id = symbolArray[i];
+        button.innerHTML = symbolArray[i];
+        if (parseInt(symbolArray[i]) || symbolArray[i] == "0"){
+            button.addEventListener("click", function() {setNumber(button.id)});
         }
-        else if (symbolArray[i-1] == "="){
+        else if (symbolArray[i] == "="){
             //Give button complete math function here
         }
-        else if (symbolArray[i-1] == "."){
-            //Decimal logic will go here
+        else if (symbolArray[i] == "."){
+            //Add functionality for decimals here
         }
         else {
-            //Giving buttons operand function will go here
+            button.addEventListener("click", function() {setOperator(button.id)});
         }
     }
     ERASE_BUTTON.addEventListener("click", function(){erase()});
 }
 
-function numberOperations(number){
-    if (CALCULATION.firstValue.length < 12 && CALCULATION.firstValue == "0"){
-        CALCULATION.firstValue = number;
+function setNumber(number){
+    if (SCREEN.value.length < 15 && SCREEN.value == "0"){
+        SCREEN.value = number;
     }
-    else if (CALCULATION.firstValue.length == 10){
-        alert("ERROr: Possible overflow");
+    else if (CALCULATION.firstValue.length == 15){
+        alert("ERROR: Possible overflow");
     }
-    else {
-        CALCULATION.firstValue = CALCULATION.firstValue + number;
+    else if (SCREEN.value != "0"){
+        SCREEN.value = SCREEN.value + number;
     }
-    SCREEN.value = CALCULATION.firstValue;
+}
+
+function setOperator(symbol){
+    CALCULATION.operator = symbol;
+}
+
+function doMath(first, operator, second){
+    first = Number.parseInt(first);
+    second = Number.parseInt(second);
+    switch (operator){
+        case "+":
+            return first + second;
+        case "-":
+            return first - second;
+        case "*":
+            return first * second;
+        case "÷":
+            if (second == 0){
+                return "ERROR";
+            }
+            else{
+                return first / second;
+            }
+    }
 }
 
 function erase(){

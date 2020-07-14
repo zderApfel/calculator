@@ -77,4 +77,5 @@ body{
     background-color: #515257;
     border-color: #515257;
     color: white;
+    border-style: inset;
 }

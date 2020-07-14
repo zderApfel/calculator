@@ -4,6 +4,7 @@ body{
 
 
 #calculator-baseplate{
+    user-select: none;
     position: absolute;
     text-align: center;
     background-color: #a13830;

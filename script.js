@@ -38,3 +38,20 @@ else if (operator sign is pressed){
 
 Erase button erases all stored values and starts fresh
 */
+
+const SCREEN = document.getElementById("screen");
+const BUTTON_AREA = document.getElementById("button-grid");
+const ERASE_BUTTON = document.getElementById("erase-button");
+
+initialize();
+
+function initialize(){
+    for (i=1; i <= 16; i++){
+        let symbolArray = "789+456-123*.0=÷".split("");
+        let button = document.createElement("div");
+        BUTTON_AREA.appendChild(button);
+        button.classList.add("button");
+        button.id = `b${i}`;
+        button.innerHTML = symbolArray[i-1];
+    }
+}

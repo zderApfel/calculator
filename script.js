@@ -22,7 +22,7 @@ if (equals sign is pressed){
         display MATH ERROR on screen
         break;
     }
-    else if (operation > 9999999){
+    else if (operation > 9999999999){
         display OVERFLOW ERROR
         break;
     }
@@ -42,12 +42,17 @@ Erase button erases all stored values and starts fresh
 const SCREEN = document.getElementById("screen");
 const BUTTON_AREA = document.getElementById("button-grid");
 const ERASE_BUTTON = document.getElementById("erase-button");
-//Add event listener for ERASE_BUTTON which will reset all values
+const CALCULATION = {
+    firstValue: "0",
+    operator: "",
+    secondValue: "0",
+    result: "0"
+}
 
 initialize();
 
 function initialize(){ //Function creates buttons, and gives them their appropriate functions
-    SCREEN.value = 0;
+    SCREEN.value = CALCULATION.firstValue;
     for (i=1; i <= 16; i++){
         let symbolArray = "789+456-123*.0=÷".split("");
         let button = document.createElement("div");
@@ -56,7 +61,7 @@ function initialize(){ //Function creates buttons, and gives them their appropri
         button.id = symbolArray[i-1];
         button.innerHTML = symbolArray[i-1];
         if (parseInt(symbolArray[i-1]) || symbolArray[i-1] == "0"){
-            button.addEventListener("click", function() {changeScreen(button.id)});
+            button.addEventListener("click", function() {numberOperations(button.id)});
         }
         else if (symbolArray[i-1] == "="){
             //Give button complete math function here
@@ -68,8 +73,26 @@ function initialize(){ //Function creates buttons, and gives them their appropri
             //Giving buttons operand function will go here
         }
     }
+    ERASE_BUTTON.addEventListener("click", function(){erase()});
 }
 
-function changeScreen(value){
-    SCREEN.value = SCREEN.value + value;
+function numberOperations(number){
+    if (CALCULATION.firstValue.length < 12 && CALCULATION.firstValue == "0"){
+        CALCULATION.firstValue = number;
+    }
+    else if (CALCULATION.firstValue.length == 10){
+        alert("ERROr: Possible overflow");
+    }
+    else {
+        CALCULATION.firstValue = CALCULATION.firstValue + number;
+    }
+    SCREEN.value = CALCULATION.firstValue;
+}
+
+function erase(){
+    CALCULATION.firstValue = "0";
+    CALCULATION.operator = "0";
+    CALCULATION.secondValue = "0";
+    CALCULATION.result = 0;
+    SCREEN.value = CALCULATION.firstValue;
 }

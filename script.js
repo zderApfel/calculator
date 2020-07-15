@@ -43,16 +43,15 @@ const SCREEN = document.getElementById("screen");
 const BUTTON_AREA = document.getElementById("button-grid");
 const ERASE_BUTTON = document.getElementById("erase-button");
 const CALCULATION = {
-    firstValue: "0",
-    operator: "",
-    secondValue: "0",
-    result: "0"
+    firstValue: null,
+    operator: null,
+    secondValue: null,
 }
 
 initialize();
 
 function initialize(){ //Function creates buttons, and gives them their appropriate functions
-    SCREEN.value = CALCULATION.firstValue;
+    SCREEN.value = "0";
     let symbolArray = "789+456-123*.0=÷".split("");
     for (i=0; i < symbolArray.length; i++){
         let button = document.createElement("div");
@@ -64,10 +63,10 @@ function initialize(){ //Function creates buttons, and gives them their appropri
             button.addEventListener("click", function() {setNumber(button.id)});
         }
         else if (symbolArray[i] == "="){
-            //Give button complete math function here
+            button.addEventListener("click", function() {calculate(CALCULATION.operator)});
         }
         else if (symbolArray[i] == "."){
-            //Add functionality for decimals here
+            button.addEventListener("click", function() {decimal()});
         }
         else {
             button.addEventListener("click", function() {setOperator(button.id)});
@@ -77,45 +76,66 @@ function initialize(){ //Function creates buttons, and gives them their appropri
 }
 
 function setNumber(number){
-    if (SCREEN.value.length < 15 && SCREEN.value == "0"){
+    if (SCREEN.value == "0"){
         SCREEN.value = number;
     }
-    else if (CALCULATION.firstValue.length == 15){
-        alert("ERROR: Possible overflow");
+    else if (SCREEN.value != "0" && CALCULATION.firstValue != null){
+        SCREEN.value = number;
     }
     else if (SCREEN.value != "0"){
         SCREEN.value = SCREEN.value + number;
     }
-}
+    if (CALCULATION.operator != null){
 
-function setOperator(symbol){
-    CALCULATION.operator = symbol;
-}
-
-function doMath(first, operator, second){
-    first = Number.parseInt(first);
-    second = Number.parseInt(second);
-    switch (operator){
-        case "+":
-            return first + second;
-        case "-":
-            return first - second;
-        case "*":
-            return first * second;
-        case "÷":
-            if (second == 0){
-                return "ERROR";
-            }
-            else{
-                return first / second;
-            }
     }
 }
 
+function decimal(){
+    if (SCREEN.value.includes(".") == false){
+        SCREEN.value = SCREEN.value + ".";
+    }
+}
+
+function setOperator(symbol){
+    if (CALCULATION.secondValue == null && CALCULATION.operator == null){
+        CALCULATION.operator = symbol;
+        CALCULATION.firstValue = SCREEN.value;
+    }
+}
+
+function calculate(operator){
+    CALCULATION.secondValue = SCREEN.value;
+    if (CALCULATION.firstValue == null || CALCULATION.secondValue == null){
+        return;
+    }
+    let first = Number.parseInt(CALCULATION.firstValue);
+    let second = Number.parseInt(CALCULATION.secondValue);
+    let result = 0;
+    switch (operator){
+        case "+":
+            result = first + second;
+            break;
+        case "-":
+            result = first - second;
+            break;
+        case "*":
+            result = first * second;
+            break;
+        case "÷":
+            if (second == 0){
+                result = "ERROR";
+            }
+            else{
+                result = first / second;
+            }
+            break;
+    }
+    SCREEN.value = result;
+}
+
 function erase(){
-    CALCULATION.firstValue = "0";
-    CALCULATION.operator = "0";
-    CALCULATION.secondValue = "0";
-    CALCULATION.result = 0;
-    SCREEN.value = CALCULATION.firstValue;
+    CALCULATION.firstValue = null;
+    CALCULATION.operator = null;
+    CALCULATION.secondValue = null;
+    SCREEN.value = "0";
 }

@@ -46,12 +46,13 @@ const CALCULATION = {
     firstValue: null,
     operator: null,
     secondValue: null,
+    result: null
 }
 
 initialize();
 
 function initialize(){ //Function creates buttons, and gives them their appropriate functions
-    SCREEN.value = "0";
+    SCREEN.value ="0";
     let symbolArray = "789+456-123*.0=÷".split("");
     for (i=0; i < symbolArray.length; i++){
         let button = document.createElement("div");
@@ -79,14 +80,14 @@ function setNumber(number){
     if (SCREEN.value == "0"){
         SCREEN.value = number;
     }
-    else if (SCREEN.value != "0" && CALCULATION.firstValue != null){
-        SCREEN.value = number;
-    }
-    else if (SCREEN.value != "0"){
+    else {
         SCREEN.value = SCREEN.value + number;
     }
-    if (CALCULATION.operator != null){
-
+    if (CALCULATION.operator == null){
+        CALCULATION.firstValue = SCREEN.value;
+    }
+    else{
+        CALCULATION.secondValue = SCREEN.value.slice(1);
     }
 }
 
@@ -97,45 +98,52 @@ function decimal(){
 }
 
 function setOperator(symbol){
-    if (CALCULATION.secondValue == null && CALCULATION.operator == null){
-        CALCULATION.operator = symbol;
-        CALCULATION.firstValue = SCREEN.value;
+    CALCULATION.operator = symbol;
+    SCREEN.value = symbol;
+    if (CALCULATION.result != null){
+        CALCULATION.firstValue = CALCULATION.result;
+        CALCULATION.secondValue = null;
+        CALCULATION.result = null;
     }
 }
 
 function calculate(operator){
-    CALCULATION.secondValue = SCREEN.value;
     if (CALCULATION.firstValue == null || CALCULATION.secondValue == null){
         return;
     }
-    let first = Number.parseInt(CALCULATION.firstValue);
-    let second = Number.parseInt(CALCULATION.secondValue);
-    let result = 0;
+    let first = Number.parseFloat(CALCULATION.firstValue);
+    let second = Number.parseFloat(CALCULATION.secondValue);
+    let z = 0;
     switch (operator){
         case "+":
-            result = first + second;
+            z = first + second;
             break;
         case "-":
-            result = first - second;
+            z = first - second;
             break;
         case "*":
-            result = first * second;
+            z = first * second;
             break;
         case "÷":
             if (second == 0){
-                result = "ERROR";
+                z = "ERROR";
             }
             else{
-                result = first / second;
+                z = first / second;
             }
             break;
     }
-    SCREEN.value = result;
+    if (z.toString().length > 17){
+        z = "OVERFLOW";
+    }
+    CALCULATION.result = z;
+    SCREEN.value = CALCULATION.result;
 }
 
 function erase(){
     CALCULATION.firstValue = null;
     CALCULATION.operator = null;
     CALCULATION.secondValue = null;
+    CALCULATION.result = null;
     SCREEN.value = "0";
 }
